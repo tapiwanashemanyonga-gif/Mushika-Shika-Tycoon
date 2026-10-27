@@ -1,0 +1,27 @@
+name: Godot Project Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate Godot project
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.3
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Show Godot version
+        run: godot --version
+
+      - name: Import project resources
+        run: godot --headless --editor --path . --quit
+
+      - name: Check project starts without scene errors
+        run: godot --headless --path . --quit-after 3
